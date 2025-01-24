@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Product } from '../../../shared/models/product.model';
 
 @Component({
   selector: 'app-product',
@@ -7,5 +8,17 @@ import { Component } from '@angular/core';
   styleUrl: './product.component.css'
 })
 export class ProductComponent {
+
+  @Input({ required: true }) product!: Product;
+
+  @Output() addToCart = new EventEmitter();
+
+  addToCartHandler(){
+  console.log('click form child');
+  this.addToCart.emit('hiola este es un msg desde el hijo' + this.product.title)
+  
+}
+
+
 
 }
