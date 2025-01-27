@@ -1,9 +1,10 @@
-import { Component, Input, signal } from '@angular/core';
+import { Component, Input, signal, SimpleChanges} from '@angular/core';
 import { Product } from '../../models/product.model';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-header',
+  standalone:true,
   imports: [CommonModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
@@ -11,12 +12,22 @@ import { CommonModule } from '@angular/common';
 export class HeaderComponent {
 
   hideSideMenu = signal(true);
-  @Input({ required: true }) cart: Product[] = []
+  @Input({ required: true }) cart: Product[] = [];
+  total = signal(0);
 
   toogleSideMenu() {
     this.hideSideMenu.update(prevState => !prevState)
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    const cart = changes['cart']; //si lo que cambio es cart,entonces el objeto chages tiene cart.No es buena practica ejecutar metodos en template
+    if (cart) {
+      this.total.set(this.calcTotal());
+    }
+  }
 
+  calcTotal() {
+    return this.cart.reduce((total, product) => total + product.price, 0)
+  }
 
 }
